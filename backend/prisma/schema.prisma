@@ -1,0 +1,33 @@
+// Schema do banco. NUNCA altere o banco manualmente: toda mudança vira migration
+//   docker compose exec backend npx prisma migrate dev --name descricao-curta
+//
+// Regra do Monolito Modular: cada módulo é dono das suas tabelas.
+// Organize os models em blocos com o comentário do módulo dono, ex.:
+//   // ===== módulo: leads =====
+//
+// Entidades candidatas (Blueprint 4.1): User, Client, Contact, Lead, FunnelStage,
+// Diagnosis, Interaction, Contract, Project, Squad, ProjectAllocation, Sprint,
+// ProjectUpdate, LeadStageHistory. Cada uma entra por card próprio, com migration.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== módulo: users =====
+// Model mínimo de base (o Prisma exige ao menos um model).
+// PROVISÓRIO: campos definitivos dependem da DP12 (compartilhamento de usuários com o Squad 2).
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}

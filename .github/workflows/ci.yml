@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Bloqueia PRs para a main que não venham da develop ou de hotfix/* (Guia 5.3)
+  branch-guard:
+    if: github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          case "${{ github.head_ref }}" in
+            develop|hotfix/*) echo "Origem permitida" ;;
+            *) echo "PRs para a main devem vir da develop ou de hotfix/*"; exit 1 ;;
+          esac
+
+  # Título do PR em Conventional Commits (vira o commit do squash) e nome da branch (Guia 3.2 e 3.4)
+  conventions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --ignore-scripts
+      - name: Título do PR segue Conventional Commits
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: echo "$PR_TITLE" | npx commitlint
+      - name: Nome da branch segue tipo/numero-descricao
+        run: node scripts/check-branch-name.mjs "${{ github.head_ref }}"
+
+  # Resumo para o revisor: arquivos de teste alterados e tamanho do PR (Guia 4.4 e 9.3)
+  review-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gerar resumo
+        run: |
+          BASE="origin/${{ github.base_ref }}"
+          CHANGED=$(git diff --numstat "$BASE"...HEAD -- . ':!**/package-lock.json' ':!**/migrations/**' | awk '{a+=$1; d+=$2} END {print a+d}')
+          TESTS=$(git diff --name-only "$BASE"...HEAD | grep -E '\.(spec|test|e2e-spec)\.tsx?$' || true)
+          {
+            echo "## Resumo para revisão"
+            echo "- Linhas alteradas (sem lockfiles/migrations): **${CHANGED:-0}** (meta: até ~400)"
+            if [ -n "$TESTS" ]; then
+              echo "- ⚠️ Arquivos de teste alterados neste PR. Confira **quem** alterou (\`git log\`): o autor do card não pode mudar a suíte definida."
+              echo "$TESTS" | sed 's/^/  - `/; s/$/`/'
+            else
+              echo "- Nenhum arquivo de teste alterado."
+            fi
+            if git diff --name-only "$BASE"...HEAD | grep -q 'backend/prisma/schema.prisma'; then
+              if git diff --name-only "$BASE"...HEAD | grep -q 'backend/prisma/migrations/'; then
+                echo "- Schema alterado **com** migration ✅"
+              else
+                echo "- ❌ Schema alterado **sem** migration"
+              fi
+            fi
+            if git diff --name-only "$BASE"...HEAD | grep -qE '(^|/)package\.json$'; then
+              echo "- ⚠️ package.json alterado: verifique dependências novas (precisam de aval do Tech Lead)."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test --if-present
+      - run: npm run build
+
+  backend-node:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      db:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: erp
+          POSTGRES_PASSWORD: erp_ci_password
+          POSTGRES_DB: erp_operacional
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U erp"
+          --health-interval 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://erp:erp_ci_password@localhost:5432/erp_operacional?schema=public
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Migrations aplicam do zero e o schema está sincronizado
+        run: |
+          npx prisma migrate deploy
+          # exit-code 2 = schema.prisma tem mudanças sem migration
+          npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema.prisma --exit-code
+      - run: npm test
+      - run: npm run build
+
+  # "Se não roda no Docker, não está pronto" (Guia 1): as imagens de produção precisam buildar
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --target prod -t erp-backend ./backend
+      - run: docker build --target prod -t erp-frontend ./frontend
