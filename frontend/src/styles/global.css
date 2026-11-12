@@ -1,0 +1,55 @@
+/* Tokens visuais base. A base visual compartilhada com o Squad 2 substitui/estende estes valores. */
+:root {
+  --color-primary: #1f4e79;
+  --color-primary-contrast: #ffffff;
+  --color-secondary: #e8eef5;
+  --color-text: #1b1b1b;
+  --color-bg: #ffffff;
+  --radius: 6px;
+  --space: 8px;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--space) * 3);
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--space) calc(var(--space) * 2);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+}
