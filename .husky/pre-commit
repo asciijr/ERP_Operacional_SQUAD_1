@@ -1,0 +1,22 @@
+# Bloqueia a inclusão acidental de arquivos de ambiente (.env, .env.local etc.).
+# O .env.example é permitido, pois deve ser versionado.
+ENV_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^|/)\.env(\..+)?$' | grep -v -E '(^|/)\.env\.example$' || true)
+if [ -n "$ENV_FILES" ]; then
+  echo "[ERRO] Arquivo de ambiente detectado na staging area:"
+  echo "$ENV_FILES"
+  echo "Remova do commit com: git reset HEAD <arquivo>"
+  exit 1
+fi
+
+# Bloqueia commits diretos na main e na develop (a proteção do GitHub é a barreira definitiva)
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "develop" ]; then
+  echo "[ERRO] Commit direto na '$BRANCH' não é permitido. Crie uma branch: tipo/numero-descricao"
+  exit 1
+fi
+
+# Valida o nome da branch (tipo/numero-descricao)
+node scripts/check-branch-name.mjs || exit 1
+
+# Lint e formatação dos arquivos alterados (frontend e backend)
+npx lint-staged
