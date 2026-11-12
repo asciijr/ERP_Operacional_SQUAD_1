@@ -99,6 +99,8 @@ Escopo = módulo: `leads`, `diagnostics`, `clients`, `contracts`, `projects`, `a
 
 ## Usando IA
 
+Guia completo com modelos de prompt e checklist: [docs/guias/05-uso-de-ia.md](docs/guias/05-uso-de-ia.md).
+
 - Nunca cole `.env`, senhas ou dados reais de clientes em ferramentas de IA.
 - Ancore o prompt no teste: *"Considere o teste em `leads.service.spec.ts`. Implemente apenas o método `create` em `LeadsService` para fazer os casos passarem, sem alterar o teste."*
 - Você responde por cada linha: o Tech Lead pode pedir que explique qualquer trecho no PR.

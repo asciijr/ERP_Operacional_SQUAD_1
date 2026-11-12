@@ -76,6 +76,7 @@ docs/               guias, arquitetura, equipe, backlog e decisões (ADR)
 | Equipe, trilhas e tarefas-piloto | [docs/equipe-e-trilhas.md](docs/equipe-e-trilhas.md) |
 | Backlog inicial para o Odoo | [docs/backlog-inicial-odoo.md](docs/backlog-inicial-odoo.md) |
 | Decisões de arquitetura | [docs/decisions/](docs/decisions/) |
+| Como usar IA (obrigatório ler) | [docs/guias/05-uso-de-ia.md](docs/guias/05-uso-de-ia.md) |
 | Regras para assistentes de IA | [AGENTS.md](AGENTS.md) |
 
 ## Squad responsável

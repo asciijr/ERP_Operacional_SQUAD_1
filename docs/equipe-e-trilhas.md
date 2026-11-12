@@ -19,6 +19,7 @@ Todos:
 1. [docs/guias/01-setup-ambiente.md](guias/01-setup-ambiente.md): projeto rodando + `npm test` no container.
 2. [docs/guias/02-branches-e-git.md](guias/02-branches-e-git.md) e [CONTRIBUTING.md](../CONTRIBUTING.md).
 3. Ler [docs/arquitetura.md](arquitetura.md) e o Guia de Engenharia seções 3, 4, 7, 8, 9 e 10.
+4. Ler [docs/guias/05-uso-de-ia.md](guias/05-uso-de-ia.md) antes de usar qualquer IA no projeto.
 
 Por pessoa (material oficial, gratuito):
 

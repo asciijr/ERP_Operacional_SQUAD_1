@@ -3,7 +3,7 @@ services:
     image: postgres:16-alpine
     env_file: .env
     ports:
-      - "5432:5432"
+      - "${DB_HOST_PORT:-5432}:5432" # mude DB_HOST_PORT no .env se a 5432 estiver ocupada
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:

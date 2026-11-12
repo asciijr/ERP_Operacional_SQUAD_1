@@ -72,7 +72,7 @@ Mudou `package.json` (alguém adicionou dependência)? `docker compose up --buil
 
 | Sintoma | Causa provável | Solução |
 |---|---|---|
-| `port is already allocated` / 5432 em uso | PostgreSQL instalado na máquina | pare o serviço local (Windows: *Serviços › postgresql › Parar*). O banco do projeto roda só no container |
+| `port is already allocated` / 5432 em uso | PostgreSQL instalado na máquina | no `.env`, troque `DB_HOST_PORT=5433` (ou pare o serviço local em *Serviços › postgresql*). O banco do projeto roda só no container |
 | `open //./pipe/dockerDesktopLinuxEngine` | Docker Desktop fechado | abra o Docker Desktop e espere "Engine running" |
 | Hot reload não atualiza | projeto em pasta do Windows com WSL | já usamos polling; se persistir, clone dentro do WSL (`~/projetos`) |
 | `Cannot find module` no container | volume de `node_modules` antigo | `docker compose down` e `docker compose up --build` |
