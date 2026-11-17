@@ -84,3 +84,5 @@ docs/               guias, arquitetura, equipe, backlog e decisões (ADR)
 **Squad 1 – ERP Operacional** · Tech Lead e Scrum Master: **Ilton Batista**
 Integrantes: Mateus, Lethicia Almeida, Kaike, Marcelo Gonçalves e Gabriel Amorim.
 Gestão de tarefas e horas: **Odoo** (fonte oficial). Padrões: **Guia de Engenharia – ASCII Playbook**.
+
+Guilherme de Souza Mota
