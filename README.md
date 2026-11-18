@@ -4,14 +4,14 @@ Sistema web interno da **ASCII Empresa Júnior (FACOM/UFU)** que centraliza o fl
 
 ## Stack
 
-| Camada | Tecnologia |
-|---|---|
-| Frontend | React + TypeScript + Vite (Atomic Design) |
-| Backend | Node.js LTS + TypeScript + NestJS (Monolito Modular) |
-| Banco | PostgreSQL 16 + Prisma (migrations versionadas) |
-| Testes | Vitest (frontend) · Jest (backend) |
-| Qualidade | ESLint + Prettier · Husky + lint-staged + commitlint |
-| Infra / CI | Docker + Docker Compose · GitHub Actions |
+| Camada     | Tecnologia                                           |
+| ---------- | ---------------------------------------------------- |
+| Frontend   | React + TypeScript + Vite (Atomic Design)            |
+| Backend    | Node.js LTS + TypeScript + NestJS (Monolito Modular) |
+| Banco      | PostgreSQL 16 + Prisma (migrations versionadas)      |
+| Testes     | Vitest (frontend) · Jest (backend)                   |
+| Qualidade  | ESLint + Prettier · Husky + lint-staged + commitlint |
+| Infra / CI | Docker + Docker Compose · GitHub Actions             |
 
 ## Como rodar
 
@@ -25,12 +25,12 @@ cp .env.example .env
 docker compose up --build
 ```
 
-| Serviço | URL |
-|---|---|
-| Frontend | http://localhost:5173 |
-| API | http://localhost:3000 (health: `/health`) |
-| Contratos da API (Swagger) | http://localhost:3000/docs |
-| Banco | `localhost:5432` (credenciais no `.env`) |
+| Serviço                    | URL                                       |
+| -------------------------- | ----------------------------------------- |
+| Frontend                   | http://localhost:5173                     |
+| API                        | http://localhost:3000 (health: `/health`) |
+| Contratos da API (Swagger) | http://localhost:3000/docs                |
+| Banco                      | `localhost:5432` (credenciais no `.env`)  |
 
 ## Testes, lint e seed
 
@@ -65,19 +65,19 @@ docs/               guias, arquitetura, equipe, backlog e decisões (ADR)
 
 ## Documentação
 
-| Para quê | Onde |
-|---|---|
-| Configurar a máquina | [docs/guias/01-setup-ambiente.md](docs/guias/01-setup-ambiente.md) |
-| Branches, commits e Git no dia a dia | [docs/guias/02-branches-e-git.md](docs/guias/02-branches-e-git.md) |
-| Fluxo do card (Odoo → branch → TDD → PR) | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| Como o Tech Lead revisa PRs | [docs/guias/03-revisao-de-pr.md](docs/guias/03-revisao-de-pr.md) |
-| Setup do GitHub (admin) | [docs/guias/04-setup-github.md](docs/guias/04-setup-github.md) |
-| Arquitetura e donos dos módulos | [docs/arquitetura.md](docs/arquitetura.md) |
-| Equipe, trilhas e tarefas-piloto | [docs/equipe-e-trilhas.md](docs/equipe-e-trilhas.md) |
-| Backlog inicial para o Odoo | [docs/backlog-inicial-odoo.md](docs/backlog-inicial-odoo.md) |
-| Decisões de arquitetura | [docs/decisions/](docs/decisions/) |
-| Como usar IA (obrigatório ler) | [docs/guias/05-uso-de-ia.md](docs/guias/05-uso-de-ia.md) |
-| Regras para assistentes de IA | [AGENTS.md](AGENTS.md) |
+| Para quê                                 | Onde                                                               |
+| ---------------------------------------- | ------------------------------------------------------------------ |
+| Configurar a máquina                     | [docs/guias/01-setup-ambiente.md](docs/guias/01-setup-ambiente.md) |
+| Branches, commits e Git no dia a dia     | [docs/guias/02-branches-e-git.md](docs/guias/02-branches-e-git.md) |
+| Fluxo do card (Odoo → branch → TDD → PR) | [CONTRIBUTING.md](CONTRIBUTING.md)                                 |
+| Como o Tech Lead revisa PRs              | [docs/guias/03-revisao-de-pr.md](docs/guias/03-revisao-de-pr.md)   |
+| Setup do GitHub (admin)                  | [docs/guias/04-setup-github.md](docs/guias/04-setup-github.md)     |
+| Arquitetura e donos dos módulos          | [docs/arquitetura.md](docs/arquitetura.md)                         |
+| Equipe, trilhas e tarefas-piloto         | [docs/equipe-e-trilhas.md](docs/equipe-e-trilhas.md)               |
+| Backlog inicial para o Odoo              | [docs/backlog-inicial-odoo.md](docs/backlog-inicial-odoo.md)       |
+| Decisões de arquitetura                  | [docs/decisions/](docs/decisions/)                                 |
+| Como usar IA (obrigatório ler)           | [docs/guias/05-uso-de-ia.md](docs/guias/05-uso-de-ia.md)           |
+| Regras para assistentes de IA            | [AGENTS.md](AGENTS.md)                                             |
 
 ## Squad responsável
 
@@ -86,3 +86,4 @@ Integrantes: Mateus, Lethicia Almeida, Kaike, Marcelo Gonçalves e Gabriel Amori
 Gestão de tarefas e horas: **Odoo** (fonte oficial). Padrões: **Guia de Engenharia – ASCII Playbook**.
 
 Guilherme de Souza Mota
+Kaike de Morais Carvalho
