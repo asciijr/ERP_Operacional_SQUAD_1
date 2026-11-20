@@ -31,3 +31,20 @@ model User {
 
   @@map("users")
 }
+
+// ===== módulo: clients =====
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  cnpj      String?  @unique
+  segment   String?
+  status    String   @default("ACTIVE")
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@map("clients")
+}
+
+
