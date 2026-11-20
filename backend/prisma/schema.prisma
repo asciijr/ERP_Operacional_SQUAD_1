@@ -1,3 +1,14 @@
+// Schema do banco. NUNCA altere o banco manualmente: toda mudança vira migration
+//   docker compose exec backend npx prisma migrate dev --name descricao-curta
+//
+// Regra do Monolito Modular: cada módulo é dono das suas tabelas.
+// Organize os models em blocos com o comentário do módulo dono, ex.:
+//   // ===== módulo: leads =====
+//
+// Entidades candidatas (Blueprint 4.1): User, Client, Contact, Lead, FunnelStage,
+// Diagnosis, Interaction, Contract, Project, Squad, ProjectAllocation, Sprint,
+// ProjectUpdate, LeadStageHistory. Cada uma entra por card próprio, com migration.
+
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
@@ -9,6 +20,8 @@ datasource db {
 }
 
 // ===== módulo: users =====
+// Model mínimo de base (o Prisma exige ao menos um model).
+// PROVISÓRIO: campos definitivos dependem da DP12 (compartilhamento de usuários com o Squad 2).
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -16,150 +29,22 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  stageChanges        LeadStageHistory[]
-  interactions        Interaction[]
-  commercialDiagnoses Diagnosis[]        @relation("CommercialDiagnosis")
-  technicalDiagnoses  Diagnosis[]        @relation("TechnicalDiagnosis")
-  closedContracts     Contract[]
-
   @@map("users")
 }
 
-// ===== módulo: leads =====
+// ===== módulo: clients =====
 model Client {
   id        String   @id @default(uuid())
   name      String
-  document  String?  @unique
+  cnpj      String?  @unique
   segment   String?
+  status    String   @default("ACTIVE")
+  notes     String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  contacts Contact[]
-  leads    Lead[]
-
+  @@index([name])
   @@map("clients")
 }
 
-model Contact {
-  id        String   @id @default(uuid())
-  clientId  String   @map("client_id")
-  name      String
-  email     String?
-  phone     String?
-  role      String?
-  isPrimary Boolean  @default(false) @map("is_primary")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
-  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-
-  @@index([clientId])
-  @@map("contacts")
-}
-
-model FunnelStage {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  order     Int      @unique
-  isClosed  Boolean  @default(false) @map("is_closed")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  leads         Lead[]
-  fromHistories LeadStageHistory[] @relation("FromStage")
-  toHistories   LeadStageHistory[] @relation("ToStage")
-
-  @@map("funnel_stages")
-}
-
-model Lead {
-  id             String   @id @default(uuid())
-  clientId       String   @map("client_id")
-  stageId        String   @map("stage_id")
-  title          String
-  source         String?
-  estimatedValue Decimal? @map("estimated_value") @db.Decimal(10, 2)
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-
-  client       Client             @relation(fields: [clientId], references: [id], onDelete: Restrict)
-  stage        FunnelStage        @relation(fields: [stageId], references: [id], onDelete: Restrict)
-  stageHistory LeadStageHistory[]
-  interactions Interaction[]
-  diagnosis    Diagnosis?
-  contract     Contract?
-
-  @@index([stageId])
-  @@index([clientId])
-  @@map("leads")
-}
-
-model LeadStageHistory {
-  id          String   @id @default(uuid())
-  leadId      String   @map("lead_id")
-  fromStageId String?  @map("from_stage_id")
-  toStageId   String   @map("to_stage_id")
-  changedById String   @map("changed_by_id")
-  changedAt   DateTime @default(now()) @map("changed_at")
-
-  lead      Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  fromStage FunnelStage? @relation("FromStage", fields: [fromStageId], references: [id], onDelete: Restrict)
-  toStage   FunnelStage  @relation("ToStage", fields: [toStageId], references: [id], onDelete: Restrict)
-  changedBy User         @relation(fields: [changedById], references: [id], onDelete: Restrict)
-
-  @@index([leadId, changedAt])
-  @@map("lead_stage_histories")
-}
-
-model Interaction {
-  id         String   @id @default(uuid())
-  leadId     String   @map("lead_id")
-  authorId   String   @map("author_id")
-  type       String
-  notes      String   @db.Text
-  occurredAt DateTime @default(now()) @map("occurred_at")
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  lead   Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  author User @relation(fields: [authorId], references: [id], onDelete: Restrict)
-
-  @@index([leadId, occurredAt])
-  @@map("interactions")
-}
-
-// ===== módulo: diagnostics =====
-model Diagnosis {
-  id                   String   @id @default(uuid())
-  leadId               String   @unique @map("lead_id")
-  commercialAuthorId   String   @map("commercial_author_id")
-  technicalAuthorId    String?  @map("technical_author_id")
-  painsAndNeeds        String   @map("pains_and_needs") @db.Text
-  spinNotes            String?  @map("spin_notes") @db.Text
-  technicalFeasibility String?  @map("technical_feasibility") @db.Text
-  isFeasible           Boolean? @map("is_feasible")
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
-
-  lead             Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  commercialAuthor User  @relation("CommercialDiagnosis", fields: [commercialAuthorId], references: [id], onDelete: Restrict)
-  technicalAuthor  User? @relation("TechnicalDiagnosis", fields: [technicalAuthorId], references: [id], onDelete: Restrict)
-
-  @@map("diagnoses")
-}
-
-// ===== módulo: contracts =====
-model Contract {
-  id           String   @id @default(uuid())
-  leadId       String   @unique @map("lead_id")
-  closedById   String   @map("closed_by_id")
-  value        Decimal  @db.Decimal(10, 2)
-  scopeSummary String   @map("scope_summary") @db.Text
-  signedAt     DateTime @default(now()) @map("signed_at")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  lead     Lead @relation(fields: [leadId], references: [id], onDelete: Restrict)
-  closedBy User @relation(fields: [closedById], references: [id], onDelete: Restrict)
-
-  @@map("contracts")
-}
