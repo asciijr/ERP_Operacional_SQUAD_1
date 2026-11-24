@@ -26,7 +26,7 @@ Fluxo: Marketing cadastra lead → Comercial move no Kanban e preenche diagnóst
 | `sprints` | ciclos por projeto | Sprint | Gabriel |
 | `users` | identidade e permissões (integra com Squad 2) | User | Marcelo · Kaike |
 
-> Onde fica `Interaction` (histórico de comunicação) e se `FunnelStage` é módulo próprio são decisões do Tech Lead: registre em `docs/decisions/` antes de criar as tabelas.
+> `FunnelStage` fica no módulo `leads` ([ADR 0004](decisions/0004-funnel-stage-no-modulo-leads.md)). Onde fica `Interaction` (histórico de comunicação) ainda é decisão do Tech Lead: registre em `docs/decisions/` antes de criar a tabela.
 
 ## Regras do Monolito Modular (o lint cobra)
 
