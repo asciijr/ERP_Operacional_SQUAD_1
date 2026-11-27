@@ -1,0 +1,46 @@
+/*
+ * Tokens visuais (base comum com o Squad 2).
+ * Valores provisórios: ajustar depois da conversa com o Squad 2.
+ * Todos os componentes devem usar estas variáveis, nunca cores soltas.
+ */
+:root {
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-border: #dfe3e8;
+  --color-text: #1c2430;
+  --color-text-muted: #5b6676;
+  --color-primary: #1f5f8b;
+  --color-primary-contrast: #ffffff;
+  --color-primary-soft: #e3eef6;
+
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius: 6px;
+  --sidebar-width: 15rem;
+  --header-height: 3.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+}

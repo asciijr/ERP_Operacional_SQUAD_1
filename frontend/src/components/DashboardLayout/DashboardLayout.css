@@ -1,0 +1,118 @@
+.dashboard {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+}
+
+.dashboard__skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -3rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  border-radius: var(--radius);
+  z-index: 10;
+}
+
+.dashboard__skip-link:focus {
+  top: var(--space-2);
+}
+
+.dashboard__sidebar {
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-4);
+}
+
+.dashboard__brand {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.dashboard__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dashboard__menu-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.dashboard__menu-link:hover {
+  background: var(--color-bg);
+}
+
+.dashboard__menu-link.is-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.dashboard__menu-link:focus-visible,
+.dashboard__skip-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.dashboard__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dashboard__header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard__title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.dashboard__content {
+  flex: 1;
+  padding: var(--space-6);
+}
+
+/* Telas pequenas: o menu vira uma barra horizontal no topo. */
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-3);
+  }
+
+  .dashboard__brand {
+    margin-bottom: var(--space-2);
+  }
+
+  .dashboard__menu {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .dashboard__menu-link {
+    white-space: nowrap;
+  }
+}
