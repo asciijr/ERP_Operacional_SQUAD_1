@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { LeadsRepository } from './leads.repository';
 import { LeadsService } from './leads.service';
 
 /**
@@ -7,7 +8,7 @@ import { LeadsService } from './leads.service';
  * dto/, entities/ e leads.service.spec.ts. Só o LeadsService é exportado.
  */
 @Module({
-  providers: [LeadsService],
+  providers: [LeadsService, LeadsRepository],
   exports: [LeadsService],
 })
 export class LeadsModule {}

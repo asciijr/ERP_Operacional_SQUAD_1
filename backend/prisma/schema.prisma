@@ -31,3 +31,16 @@ model User {
 
   @@map("users")
 }
+
+// ===== módulo: leads =====
+// Etapas do funil comercial (ADR 0004). As regras de negócio usam sempre a `key`, nunca `name` ou `id`.
+model FunnelStage {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  name      String
+  position  Int      @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("funnel_stages")
+}
